@@ -522,16 +522,242 @@ Key migration considerations (Epic 12):
 
 ## Development Workflow
 
+### ⚠️ IMPORTANT: All Changes Must Go Through Pull Requests
+
+**NEVER commit directly to `main` branch!** All changes MUST be submitted via Pull Requests with passing tests.
+
+### Workflow Steps
+
 1. **Pick a Task:** From GitHub Issues (#15-#191)
-2. **Create Branch:** `git checkout -b task/T1.1.1-rails-init`
-3. **Write Tests First:** TDD approach preferred
-4. **Implement Feature:** Follow task acceptance criteria
-5. **Run Tests:** `bin/test` - must pass
-6. **Run Linter:** `bundle exec rubocop -a`
-7. **Commit:** Reference issue number in commit message
-8. **Push & PR:** Create pull request, link to issue
-9. **Review:** Address feedback
-10. **Merge:** Squash and merge when approved
+2. **Create Feature Branch:**
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b task/T1.1.5-redis-setup
+   ```
+
+3. **Write Tests First (TDD):**
+   - Write failing tests before implementation
+   - Follow RSpec conventions
+   - Aim for >90% code coverage
+   - Test all edge cases
+
+4. **Implement Feature:**
+   - Follow task acceptance criteria
+   - Write clean, readable code
+   - Add comments for complex logic
+   - Follow Rails conventions
+
+5. **Run Test Suite (MUST PASS):**
+   ```bash
+   # Run all tests
+   bundle exec rspec
+
+   # Run specific test file
+   bundle exec rspec spec/models/character_spec.rb
+
+   # Run with coverage report
+   COVERAGE=true bundle exec rspec
+   ```
+   **Tests MUST pass before committing!**
+
+6. **Run Code Quality Checks:**
+   ```bash
+   # Auto-fix style issues
+   bundle exec rubocop -a
+
+   # Security scan
+   bundle exec brakeman
+
+   # Dependency audit
+   bundle exec bundle-audit
+   ```
+
+7. **Verify Changes Locally:**
+   ```bash
+   # Start development server
+   bin/dev
+
+   # Manual testing in browser/console
+   bin/rails console
+   ```
+
+8. **Commit Changes:**
+   - Use conventional commits format
+   - Reference issue number
+   - Include detailed description
+   ```bash
+   git add .
+   git commit -m "feat: add Redis caching support [T1.1.5]"
+   ```
+
+9. **Push Branch:**
+   ```bash
+   git push -u origin task/T1.1.5-redis-setup
+   ```
+
+10. **Create Pull Request:**
+    - Use PR template
+    - Link to issue
+    - Add screenshots if UI changes
+    - Request review
+
+11. **CI/CD Validation (Automatic):**
+    - ✅ Tests pass (RSpec)
+    - ✅ Linter passes (Rubocop)
+    - ✅ Security scan passes (Brakeman)
+    - ✅ Dependencies safe (Bundler-audit)
+    - ✅ Code coverage >= 80%
+
+12. **Code Review:**
+    - Address feedback
+    - Update PR as needed
+    - Re-run tests after changes
+
+13. **Merge:**
+    - Maintainer approves
+    - Squash and merge to main
+    - Delete feature branch
+    - Automatic deployment to staging
+
+### Testing Requirements
+
+#### Test Coverage Goals
+- **Overall:** >= 90% coverage
+- **Models:** 100% coverage
+- **Controllers:** >= 85% coverage
+- **Services:** >= 90% coverage
+- **Critical paths:** 100% coverage
+
+#### What to Test
+
+**Models:**
+```ruby
+# spec/models/character_spec.rb
+RSpec.describe Character, type: :model do
+  describe 'validations' do
+    it { should validate_presence_of(:name) }
+    it { should validate_uniqueness_of(:name).scoped_to(:guild_id) }
+  end
+
+  describe 'associations' do
+    it { should belong_to(:guild) }
+    it { should have_many(:raid_attendances) }
+  end
+
+  describe '#current_dkp' do
+    it 'calculates DKP correctly' do
+      # Test implementation
+    end
+  end
+end
+```
+
+**Controllers:**
+```ruby
+# spec/controllers/characters_controller_spec.rb
+RSpec.describe CharactersController, type: :controller do
+  describe 'GET #index' do
+    it 'returns success' do
+      get :index
+      expect(response).to be_successful
+    end
+  end
+
+  describe 'authorization' do
+    it 'requires authentication' do
+      # Test authorization
+    end
+  end
+end
+```
+
+**System Tests:**
+```ruby
+# spec/system/character_management_spec.rb
+RSpec.describe 'Character Management', type: :system do
+  it 'allows officer to create character' do
+    visit new_character_path
+    fill_in 'Name', with: 'Legolas'
+    click_button 'Create Character'
+    expect(page).to have_content('Character created')
+  end
+end
+```
+
+**Configuration Tests:**
+```ruby
+# spec/config/redis_spec.rb
+RSpec.describe 'Redis Configuration' do
+  it 'connects to Redis' do
+    expect(Redis.current.ping).to eq('PONG')
+  end
+
+  it 'uses correct cache store' do
+    expect(Rails.cache.class.name).to include('RedisCacheStore')
+  end
+end
+```
+
+#### Test Commands
+
+```bash
+# Run all tests
+bundle exec rspec
+
+# Run specific test
+bundle exec rspec spec/models/character_spec.rb:10
+
+# Run tests with coverage
+COVERAGE=true bundle exec rspec
+
+# Run tests matching pattern
+bundle exec rspec --tag focus
+
+# Run in parallel (faster)
+bundle exec rspec --format progress --order random
+```
+
+### Continuous Integration (GitHub Actions)
+
+Every PR automatically runs:
+
+1. **RSpec Test Suite**
+   - All tests must pass
+   - Coverage report generated
+   - Fails if coverage < 80%
+
+2. **Rubocop Linter**
+   - Enforces style guide
+   - Fails on offenses
+   - Auto-fixable issues noted
+
+3. **Brakeman Security Scan**
+   - Detects security vulnerabilities
+   - Fails on high/medium severity
+   - Provides detailed report
+
+4. **Bundler Audit**
+   - Checks for vulnerable dependencies
+   - Fails if CVEs detected
+   - Suggests updates
+
+5. **Test Matrix**
+   - Ruby: 3.3.x
+   - Rails: 8.0.x
+   - PostgreSQL: 16
+   - Redis: 7
+
+### PR Merge Requirements
+
+Before a PR can be merged, it MUST:
+
+- ✅ All CI checks pass (tests, linter, security)
+- ✅ Code coverage >= 80%
+- ✅ At least 1 approval from maintainer
+- ✅ No merge conflicts
+- ✅ All conversations resolved
+- ✅ Passes manual QA (if applicable)
 
 ## Questions to Ask
 
