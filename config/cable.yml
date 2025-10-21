@@ -4,7 +4,9 @@ development:
   channel_prefix: guildhub_development
 
 test:
-  adapter: test
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  channel_prefix: guildhub_test
 
 production:
   adapter: redis
