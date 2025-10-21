@@ -522,9 +522,14 @@ Key migration considerations (Epic 12):
 
 ## Development Workflow
 
-### ⚠️ IMPORTANT: All Changes Must Go Through Pull Requests
+### ⚠️ IMPORTANT: Branch Protection Rules
 
-**NEVER commit directly to `main` branch!** All changes MUST be submitted via Pull Requests with passing tests.
+**NEVER commit directly to `main` branch!** All changes MUST go through Pull Requests.
+
+- The `main` branch is protected
+- All development happens on feature branches
+- Changes are merged via Pull Requests only
+- This applies to both human developers AND AI assistants
 
 ### Workflow Steps
 
@@ -534,6 +539,8 @@ Key migration considerations (Epic 12):
    git checkout main
    git pull origin main
    git checkout -b task/T1.1.5-redis-setup
+   # or
+   git checkout -b feature/discord-oauth
    ```
 
 3. **Write Tests First (TDD):**
@@ -758,6 +765,246 @@ Before a PR can be merged, it MUST:
 - ✅ No merge conflicts
 - ✅ All conversations resolved
 - ✅ Passes manual QA (if applicable)
+
+### Conventional Commits
+
+All commits MUST follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+**Format:**
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+- `feat:` - New feature (triggers MINOR version bump)
+- `fix:` - Bug fix (triggers PATCH version bump)
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, missing semicolons, etc.)
+- `refactor:` - Code refactoring (no functional changes)
+- `perf:` - Performance improvements
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks (dependencies, build process, etc.)
+- `ci:` - CI/CD changes
+- `revert:` - Revert previous commit
+
+**Breaking Changes:**
+- Add `!` after type/scope: `feat!:` or `feat(api)!:`
+- Or include `BREAKING CHANGE:` in footer (triggers MAJOR version bump)
+
+**Examples:**
+```bash
+# Feature with issue reference
+feat: add Discord OAuth authentication [T2.1.1]
+
+Implements Discord OAuth as primary authentication method.
+
+- Add OmniAuth Discord provider
+- Create callback controller
+- Store Discord avatar URL
+- Set user session
+
+Resolves #18
+
+# Bug fix
+fix(dkp): correct balance calculation for negative adjustments
+
+The DKP calculator was not properly handling negative adjustments
+when calculating historical balances.
+
+Fixes #142
+
+# Breaking change
+feat(api)!: change DKP endpoint response structure
+
+BREAKING CHANGE: The /api/v1/dkp endpoint now returns an object
+instead of an array. Clients must update their integration.
+
+# Chore
+chore: upgrade Rails from 8.0.0 to 8.0.1
+
+# Documentation
+docs: add Redis configuration guide to CLAUDE.md
+```
+
+**Commit Body Template:**
+```
+<type>: <short summary> [TaskID]
+
+<detailed description>
+
+**Changes:**
+- Change 1
+- Change 2
+- Change 3
+
+**Why:**
+<reasoning for the change>
+
+Resolves #<issue-number>
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+### Semantic Versioning
+
+GuildHub follows [Semantic Versioning](https://semver.org/) (SemVer): `MAJOR.MINOR.PATCH`
+
+**Version Format:** `X.Y.Z` (e.g., `1.2.3`)
+
+- **MAJOR (X):** Breaking changes (incompatible API changes)
+  - Triggered by: `feat!:`, `fix!:`, or `BREAKING CHANGE:` in commit
+  - Example: `1.0.0` → `2.0.0`
+  - When: Database migrations that break compatibility, API changes, major refactors
+
+- **MINOR (Y):** New features (backwards-compatible)
+  - Triggered by: `feat:` commits
+  - Example: `1.2.3` → `1.3.0`
+  - When: New functionality, new endpoints, new models
+
+- **PATCH (Z):** Bug fixes (backwards-compatible)
+  - Triggered by: `fix:` commits
+  - Example: `1.2.3` → `1.2.4`
+  - When: Bug fixes, security patches, documentation updates
+
+**Pre-release Versions:**
+- Development: `0.x.x` (before first production release)
+- Alpha: `1.0.0-alpha.1`
+- Beta: `1.0.0-beta.1`
+- Release Candidate: `1.0.0-rc.1`
+
+**Version Tags:**
+```bash
+# Create a new version tag
+git tag -a v1.2.3 -m "Release version 1.2.3"
+git push origin v1.2.3
+```
+
+**Current Version:** `0.1.0` (pre-development phase)
+
+**Version History:**
+- `0.1.0` - Initial project setup (Rails 8, Docker, credentials)
+- `0.2.0` - Authentication system (Discord OAuth, Devise)
+- `0.3.0` - Guild & Character management
+- `0.4.0` - DKP tracking system
+- `1.0.0` - First production release (after all 4 phases complete)
+
+### Pull Request Guidelines
+
+**PR Title Format:**
+```
+[TaskID] Type: Short description
+```
+
+**Examples:**
+```
+[T1.1.4] feat: Configure Rails credentials and secrets management
+[T2.1.1] feat: Add Discord OAuth authentication
+[T3.2.1] fix: Character validation allows invalid classes
+```
+
+**PR Description Template:**
+```markdown
+## Description
+Brief description of changes
+
+## Related Issue
+Closes #123
+
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+
+## Changes Made
+- Change 1
+- Change 2
+- Change 3
+
+## Testing
+- [ ] Tests pass locally (`bin/test`)
+- [ ] Linter passes (`bundle exec rubocop`)
+- [ ] Manual testing completed
+
+## Screenshots (if applicable)
+Add screenshots here
+
+## Checklist
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Comments added for complex logic
+- [ ] Documentation updated
+- [ ] No console warnings/errors
+- [ ] Tests added/updated
+- [ ] All acceptance criteria met
+```
+
+**PR Best Practices:**
+- Keep PRs small and focused (one task per PR)
+- Link to the corresponding GitHub issue
+- Request review from maintainer
+- Respond to review comments promptly
+- Squash commits before merging (maintainer will do this)
+- Delete branch after merge
+
+### Branch Naming Conventions
+
+```
+task/T<epic>.<section>.<task>-<short-description>
+feature/<feature-name>
+fix/<bug-description>
+chore/<maintenance-task>
+docs/<documentation-update>
+```
+
+**Examples:**
+```
+task/T1.1.4-rails-credentials
+task/T2.1.1-discord-oauth
+feature/character-claiming
+fix/dkp-calculation-bug
+chore/upgrade-rails-8.0.1
+docs/update-readme
+```
+
+### Code Review Process
+
+1. **Create PR** - Push branch and create PR on GitHub
+2. **Automated Checks** - CI/CD runs tests, linter, security scan
+3. **Manual Review** - Maintainer reviews code
+4. **Feedback** - Address review comments, push updates
+5. **Approval** - Maintainer approves PR
+6. **Merge** - Maintainer squashes and merges to main
+7. **Cleanup** - Delete feature branch
+8. **Deploy** - Automatic deployment to staging
+
+### Git Best Practices
+
+**DO:**
+- ✅ Create feature branches from `main`
+- ✅ Write descriptive commit messages
+- ✅ Commit frequently (atomic commits)
+- ✅ Pull latest `main` before creating branch
+- ✅ Rebase on `main` if needed: `git rebase main`
+- ✅ Use conventional commit format
+- ✅ Reference issue numbers in commits
+- ✅ Test before committing
+
+**DON'T:**
+- ❌ NEVER commit directly to `main`
+- ❌ Don't commit secrets or credentials
+- ❌ Don't commit large binary files
+- ❌ Don't commit commented-out code
+- ❌ Don't commit `binding.pry` or debugger statements
+- ❌ Don't force push to shared branches
+- ❌ Don't merge without approval
+- ❌ Don't commit broken tests
 
 ## Questions to Ask
 
