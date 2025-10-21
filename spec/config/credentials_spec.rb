@@ -12,11 +12,12 @@ RSpec.describe 'Credentials Configuration', type: :configuration do
       expect(File.exist?(Rails.root.join('config/credentials/production.yml.enc'))).to be true
     end
 
-    it 'has development encryption key' do
+    # These tests only run locally where .key files exist (not in CI/CD)
+    it 'has development encryption key', skip: ENV['CI'].present? do
       expect(File.exist?(Rails.root.join('config/credentials/development.key'))).to be true
     end
 
-    it 'has production encryption key' do
+    it 'has production encryption key', skip: ENV['CI'].present? do
       expect(File.exist?(Rails.root.join('config/credentials/production.key'))).to be true
     end
   end
@@ -24,13 +25,14 @@ RSpec.describe 'Credentials Configuration', type: :configuration do
   describe 'credential structure' do
     let(:credentials) { Rails.application.credentials }
 
-    it 'has secret_key_base' do
+    # Skip credential content tests in CI/CD where master keys aren't available
+    it 'has secret_key_base', skip: ENV['CI'].present? do
       expect(credentials.secret_key_base).to be_present
       expect(credentials.secret_key_base).to be_a(String)
       expect(credentials.secret_key_base.length).to be >= 128
     end
 
-    it 'has discord configuration structure' do
+    it 'has discord configuration structure', skip: ENV['CI'].present? do
       discord_config = credentials.discord
       expect(discord_config).to be_a(Hash)
       expect(discord_config).to have_key(:client_id)
@@ -38,7 +40,7 @@ RSpec.describe 'Credentials Configuration', type: :configuration do
       expect(discord_config).to have_key(:bot_token)
     end
 
-    it 'has database configuration structure' do
+    it 'has database configuration structure', skip: ENV['CI'].present? do
       database_config = credentials.database
       expect(database_config).to be_a(Hash)
       expect(database_config).to have_key(:username)
@@ -46,13 +48,13 @@ RSpec.describe 'Credentials Configuration', type: :configuration do
       expect(database_config).to have_key(:host)
     end
 
-    it 'has redis configuration structure' do
+    it 'has redis configuration structure', skip: ENV['CI'].present? do
       redis_config = credentials.redis
       expect(redis_config).to be_a(Hash)
       expect(redis_config).to have_key(:url)
     end
 
-    it 'has aws configuration structure' do
+    it 'has aws configuration structure', skip: ENV['CI'].present? do
       aws_config = credentials.aws
       expect(aws_config).to be_a(Hash)
       expect(aws_config).to have_key(:access_key_id)
