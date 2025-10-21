@@ -14,8 +14,8 @@ $redis = Redis.new(
 )
 
 # Provide backward compatibility with Redis.current pattern
-module Redis
-  def self.current
+class << Redis
+  def current
     $redis
   end
 end
