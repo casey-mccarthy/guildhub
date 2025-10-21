@@ -25,8 +25,14 @@ Rails.application.configure do
     config.action_controller.perform_caching = false
   end
 
-  # Change to :null_store to avoid any caching.
-  config.cache_store = :memory_store
+  # Use Redis for caching in development
+  # This matches production behavior and allows testing cache-dependent features
+  config.cache_store = :redis_cache_store, {
+    url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/0" },
+    namespace: "guildhub_development",
+    expires_in: 90.minutes,
+    reconnect_attempts: 3
+  }
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local

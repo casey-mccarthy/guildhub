@@ -46,8 +46,17 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Replace the default in-process memory cache store with a durable alternative.
-  # config.cache_store = :mem_cache_store
+  # Use Redis for caching in production with multi-level strategy
+  config.cache_store = :redis_cache_store, {
+    url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/0" },
+    namespace: "guildhub_production",
+    expires_in: 90.minutes,
+    reconnect_attempts: 5,
+    error_handler: lambda { |method:, returning:, exception:|
+      # Log cache errors but don't crash the application
+      Rails.logger.error("Redis cache error: #{exception.class} - #{exception.message}")
+    }
+  }
 
   # Replace the default in-process and non-durable queuing backend for Active Job.
   # config.active_job.queue_adapter = :resque
