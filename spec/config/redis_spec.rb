@@ -9,7 +9,7 @@ RSpec.describe 'Redis Configuration', type: :configuration do
     end
 
     it 'has valid YAML structure' do
-      config = YAML.load_file(Rails.root.join('config/redis.yml'))
+      config = YAML.load_file(Rails.root.join('config/redis.yml'), aliases: true)
       expect(config).to be_a(Hash)
       expect(config).to have_key('development')
       expect(config).to have_key('test')
