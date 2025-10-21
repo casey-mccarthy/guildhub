@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+# Test Redis connection
+# Usage: bin/test_redis
+
+require_relative "../config/environment"
+
+puts "Testing Redis connection..."
+puts "=" * 50
+
+begin
+  # Test basic Redis connectivity
+  redis_url = ENV.fetch("REDIS_URL") { "redis://localhost:6379/0" }
+  puts "\n📡 Connecting to: #{redis_url}"
+
+  # Test Rails cache (which uses Redis)
+  puts "\n🧪 Testing Rails cache (redis_cache_store)..."
+  Rails.cache.write("test_key", "Hello from GuildHub!", expires_in: 5.minutes)
+  cached_value = Rails.cache.read("test_key")
+
+  if cached_value == "Hello from GuildHub!"
+    puts "   ✅ Cache write/read successful: #{cached_value}"
+  else
+    puts "   ❌ Cache test failed"
+    exit 1
+  end
+
+  # Test cache deletion
+  Rails.cache.delete("test_key")
+  deleted_value = Rails.cache.read("test_key")
+
+  if deleted_value.nil?
+    puts "   ✅ Cache deletion successful"
+  else
+    puts "   ❌ Cache deletion failed"
+    exit 1
+  end
+
+  # Test cache stats
+  puts "\n📊 Cache Store Configuration:"
+  puts "   Type: #{Rails.cache.class.name}"
+  puts "   Namespace: #{Rails.configuration.cache_store.last[:namespace] rescue 'default'}"
+  puts "   Expires in: #{Rails.configuration.cache_store.last[:expires_in] rescue 'not set'}"
+
+  # Test ActionCable connection
+  puts "\n🔌 Testing ActionCable (Redis adapter)..."
+  cable_config = Rails.application.config_for(:cable)
+  puts "   Adapter: #{cable_config['adapter']}"
+  puts "   URL: #{cable_config['url']}"
+
+  if cable_config['adapter'] == 'redis'
+    puts "   ✅ ActionCable configured to use Redis"
+  else
+    puts "   ⚠️  ActionCable not using Redis (using: #{cable_config['adapter']})"
+  end
+
+  puts "\n" + "=" * 50
+  puts "✅ All Redis tests passed!"
+  puts "=" * 50
+
+rescue Redis::CannotConnectError => e
+  puts "\n❌ Cannot connect to Redis!"
+  puts "   Error: #{e.message}"
+  puts "\n💡 Make sure Redis is running:"
+  puts "   docker-compose up -d redis"
+  puts "   or"
+  puts "   redis-server"
+  exit 1
+rescue => e
+  puts "\n❌ Redis test failed!"
+  puts "   Error: #{e.class} - #{e.message}"
+  puts "   Backtrace:"
+  e.backtrace.first(5).each { |line| puts "     #{line}" }
+  exit 1
+end
