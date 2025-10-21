@@ -1,0 +1,35 @@
+# Dockerfile.dev - Development environment
+# This is optimized for fast rebuilds and live code reloading
+
+FROM ruby:3.3.6-slim
+
+# Install dependencies
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    git \
+    curl \
+    vim \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Install Rails 8
+RUN gem install rails -v '~> 8.0.0'
+
+# Copy Gemfile if it exists (will be created when we run rails new)
+COPY Gemfile* ./
+RUN if [ -f Gemfile ]; then bundle install; fi
+
+# Copy application code
+COPY . .
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start rails server
+CMD ["bash"]

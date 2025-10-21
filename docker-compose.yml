@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # PostgreSQL 16 Database
+  db:
+    image: postgres:16-alpine
+    container_name: guildhub_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: guildhub_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 7 (for caching and ActionCable)
+  redis:
+    image: redis:7-alpine
+    container_name: guildhub_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Rails 8 Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: guildhub_web
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:postgres@db:5432/guildhub_development
+      REDIS_URL: redis://redis:6379/0
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY:-}
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount the entire application for live code reloading
+      - .:/app
+      # Mount bundle cache to speed up container rebuilds
+      - bundle_cache:/usr/local/bundle
+      # Exclude tmp and log from volume for performance
+      - /app/tmp
+      - /app/log
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  bundle_cache:
+    driver: local

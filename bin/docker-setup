@@ -1,0 +1,66 @@
+#!/bin/bash
+# Script to initialize Rails application in Docker container
+
+set -e
+
+echo "=== GuildHub Docker Setup ==="
+echo ""
+
+# Build the development image
+echo "📦 Building Docker development image..."
+docker compose build
+
+# Create a temporary container to run rails new
+echo ""
+echo "🚀 Initializing Rails 8 application..."
+docker compose run --rm --no-deps web \
+  rails new . --force \
+  --database=postgresql \
+  --css=tailwind \
+  --javascript=esbuild \
+  --skip-test \
+  --skip-bundle
+
+echo ""
+echo "📝 Configuring database.yml for Docker..."
+
+# Update database.yml to use Docker environment variables
+cat > config/database.yml << 'EOF'
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("DATABASE_HOST") { "db" } %>
+  username: <%= ENV.fetch("DATABASE_USER") { "postgres" } %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") { "postgres" } %>
+
+development:
+  <<: *default
+  database: guildhub_development
+
+test:
+  <<: *default
+  database: guildhub_test
+
+production:
+  <<: *default
+  database: guildhub_production
+  username: guildhub
+  password: <%= ENV["GUILDHUB_DATABASE_PASSWORD"] %>
+EOF
+
+echo ""
+echo "📦 Installing dependencies..."
+docker compose run --rm web bundle install
+
+echo ""
+echo "🗄️  Creating database..."
+docker compose run --rm web rails db:create
+
+echo ""
+echo "✅ Setup complete!"
+echo ""
+echo "To start the development server, run:"
+echo "  docker compose up"
+echo ""
+echo "The application will be available at http://localhost:3000"
