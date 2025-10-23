@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* GuildHub - Project 1999 EverQuest Theme */
+
+@theme {
+  /* P99 Brand Colors - Inspired by classic EverQuest */
+  --color-everquest-blue: #1e3a8a;      /* Deep blue (EQ branding) */
+  --color-everquest-gold: #fbbf24;      /* Gold (classic EQ feel) */
+  --color-everquest-bronze: #92400e;    /* Bronze accent */
+
+  /* DKP Status Colors */
+  --color-dkp-positive: #10b981;        /* Green for positive DKP */
+  --color-dkp-neutral: #6b7280;         /* Gray for zero/neutral */
+  --color-dkp-negative: #ef4444;        /* Red for negative DKP */
+
+  /* EverQuest Class Colors (matching classic UI) */
+  --color-class-warrior: #78350f;       /* Brown */
+  --color-class-cleric: #dbeafe;        /* Light blue */
+  --color-class-paladin: #bfdbfe;       /* Pale blue */
+  --color-class-ranger: #84cc16;        /* Green */
+  --color-class-shadowknight: #1e293b;  /* Dark slate */
+  --color-class-druid: #22c55e;         /* Forest green */
+  --color-class-monk: #fbbf24;          /* Gold */
+  --color-class-bard: #a855f7;          /* Purple */
+  --color-class-rogue: #525252;         /* Dark gray */
+  --color-class-shaman: #14b8a6;        /* Teal */
+  --color-class-necromancer: #6b21a8;   /* Dark purple */
+  --color-class-wizard: #8b5cf6;        /* Violet */
+  --color-class-magician: #ec4899;      /* Pink */
+  --color-class-enchanter: #f472b6;     /* Light pink */
+
+  /* UI Theme Colors */
+  --color-primary: var(--color-everquest-blue);
+  --color-secondary: var(--color-everquest-gold);
+  --color-accent: var(--color-everquest-bronze);
+
+  /* Font Family */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Custom Utility Classes */
+
+/* DKP Display Helpers */
+.dkp-positive {
+  color: var(--color-dkp-positive);
+}
+
+.dkp-neutral {
+  color: var(--color-dkp-neutral);
+}
+
+.dkp-negative {
+  color: var(--color-dkp-negative);
+}
+
+/* Class Color Helpers */
+.class-warrior { color: var(--color-class-warrior); }
+.class-cleric { color: var(--color-class-cleric); }
+.class-paladin { color: var(--color-class-paladin); }
+.class-ranger { color: var(--color-class-ranger); }
+.class-shadowknight { color: var(--color-class-shadowknight); }
+.class-druid { color: var(--color-class-druid); }
+.class-monk { color: var(--color-class-monk); }
+.class-bard { color: var(--color-class-bard); }
+.class-rogue { color: var(--color-class-rogue); }
+.class-shaman { color: var(--color-class-shaman); }
+.class-necromancer { color: var(--color-class-necromancer); }
+.class-wizard { color: var(--color-class-wizard); }
+.class-magician { color: var(--color-class-magician); }
+.class-enchanter { color: var(--color-class-enchanter); }
+
+/* Layout Helpers */
+.container-guildhub {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Card Styles */
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.card-header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
