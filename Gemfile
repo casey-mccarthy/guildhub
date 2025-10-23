@@ -45,6 +45,29 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# Authentication
+gem "devise", "~> 4.9"
+gem "omniauth-discord"
+gem "omniauth-rails_csrf_protection"
+
+# Authorization
+gem "pundit", "~> 2.3"
+
+# Audit trail
+gem "paper_trail", "~> 15.0"
+
+# Pagination
+gem "kaminari", "~> 1.2"
+
+# PostgreSQL full-text search
+gem "pg_search", "~> 2.3"
+
+# API serialization
+gem "jsonapi-serializer"
+
+# View components
+gem "view_component", "~> 3.0"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -80,4 +103,16 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Enhanced Rails console
+  gem "pry-rails"
+
+  # N+1 query detection
+  gem "bullet"
+
+  # Performance profiling
+  gem "rack-mini-profiler"
+
+  # Email preview in development
+  gem "letter_opener"
 end
