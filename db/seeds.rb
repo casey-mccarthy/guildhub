@@ -5,7 +5,7 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 # Load EverQuest constants
-require_relative "../lib/everquest/constants"
+require_relative "../lib/ever_quest"
 
 puts "🎮 GuildHub - Project 1999 DKP System"
 puts "=" * 50
