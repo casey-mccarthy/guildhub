@@ -58,6 +58,7 @@ All planning documentation is in the [`/docs`](docs/) directory:
 
 | Document | Description |
 |----------|-------------|
+| [**DEVELOPMENT.md**](DEVELOPMENT.md) | Daily development guide - running server, testing, debugging |
 | [**PRD**](docs/PRD-GuildHub-RailsVersion.md) | Product Requirements Document - features and scope |
 | [**ERD**](docs/ERD-GuildHub-P99.md) | Entity Relationship Diagram - complete database schema |
 | [**Architecture**](docs/ModernArchitecture.md) | Technical architecture and design decisions |
