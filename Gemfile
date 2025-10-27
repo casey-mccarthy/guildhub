@@ -54,7 +54,7 @@ gem "omniauth-rails_csrf_protection"
 gem "pundit", "~> 2.3"
 
 # Audit trail
-gem "paper_trail", "~> 15.0"
+gem "paper_trail", "~> 17.0"
 
 # Pagination
 gem "kaminari", "~> 1.2"
