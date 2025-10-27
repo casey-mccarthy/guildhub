@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get "/auth/:provider/callback", to: "auth/callbacks#create", as: :auth_callback
   get "/auth/failure", to: "auth/callbacks#failure", as: :auth_failure
 
+  # Session management (Epic 2)
+  delete "/logout", to: "sessions#destroy", as: :logout
+
   # Defines the root path route ("/")
   root "home#index"
 end
