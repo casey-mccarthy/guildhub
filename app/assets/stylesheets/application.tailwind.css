@@ -13,6 +13,12 @@
   --color-dkp-neutral: #6b7280;         /* Gray for zero/neutral */
   --color-dkp-negative: #ef4444;        /* Red for negative DKP */
 
+  /* Discord Brand Colors */
+  --color-discord-blurple: #5865F2;     /* Discord brand color */
+  --color-discord-blurple-dark: #4752C4; /* Discord hover color */
+  --color-discord-green: #57F287;       /* Discord success */
+  --color-discord-red: #ED4245;         /* Discord error */
+
   /* EverQuest Class Colors (matching classic UI) */
   --color-class-warrior: #78350f;       /* Brown */
   --color-class-cleric: #dbeafe;        /* Light blue */
