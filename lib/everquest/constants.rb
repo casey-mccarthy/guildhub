@@ -2,37 +2,37 @@
 
 module EverQuest
   # Project 1999 EverQuest Classes
-  CLASSES = %w[
-    Warrior
-    Cleric
-    Paladin
-    Ranger
-    Shadow\ Knight
-    Druid
-    Monk
-    Bard
-    Rogue
-    Shaman
-    Necromancer
-    Wizard
-    Magician
-    Enchanter
+  CLASSES = [
+    "Warrior",
+    "Cleric",
+    "Paladin",
+    "Ranger",
+    "Shadow Knight",
+    "Druid",
+    "Monk",
+    "Bard",
+    "Rogue",
+    "Shaman",
+    "Necromancer",
+    "Wizard",
+    "Magician",
+    "Enchanter"
   ].freeze
 
   # Project 1999 EverQuest Races
-  RACES = %w[
-    Human
-    Barbarian
-    Erudite
-    Wood\ Elf
-    High\ Elf
-    Dark\ Elf
-    Half\ Elf
-    Dwarf
-    Troll
-    Ogre
-    Halfling
-    Gnome
+  RACES = [
+    "Human",
+    "Barbarian",
+    "Erudite",
+    "Wood Elf",
+    "High Elf",
+    "Dark Elf",
+    "Half Elf",
+    "Dwarf",
+    "Troll",
+    "Ogre",
+    "Halfling",
+    "Gnome"
   ].freeze
 
   # P99 Servers

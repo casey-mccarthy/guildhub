@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "everquest/constants"
 
 RSpec.describe EverQuest do
   describe "CLASSES" do
