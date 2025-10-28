@@ -97,30 +97,30 @@ DATABASE_USER=myuser bin/test_local
 **First-time setup:**
 ```bash
 # Create test database
-docker-compose exec web bin/rails db:create RAILS_ENV=test
+docker compose exec web bin/rails db:create RAILS_ENV=test
 
 # Run migrations
-docker-compose exec web bin/rails db:migrate RAILS_ENV=test
+docker compose exec web bin/rails db:migrate RAILS_ENV=test
 ```
 
 **Run tests:**
 ```bash
 # All tests
-docker-compose exec web bundle exec rspec
+docker compose exec web bundle exec rspec
 
 # Specific test file
-docker-compose exec web bundle exec rspec spec/models/user_spec.rb
+docker compose exec web bundle exec rspec spec/models/user_spec.rb
 
 # Specific test by line number
-docker-compose exec web bundle exec rspec spec/models/user_spec.rb:42
+docker compose exec web bundle exec rspec spec/models/user_spec.rb:42
 
 # With documentation format
-docker-compose exec web bundle exec rspec --format documentation
+docker compose exec web bundle exec rspec --format documentation
 
 # Specific test suite
-docker-compose exec web bundle exec rspec spec/models/
-docker-compose exec web bundle exec rspec spec/requests/
-docker-compose exec web bundle exec rspec spec/system/
+docker compose exec web bundle exec rspec spec/models/
+docker compose exec web bundle exec rspec spec/requests/
+docker compose exec web bundle exec rspec spec/system/
 ```
 
 ### Local Environment
@@ -405,7 +405,7 @@ bundle exec rspec --profile 10
 **Solution:**
 ```bash
 # Ensure Docker containers are running
-docker-compose ps
+docker compose ps
 
 # Use Docker test script
 bin/test_docker
@@ -429,7 +429,7 @@ RAILS_ENV=test bin/rails db:migrate
 **Solution:**
 ```bash
 # Docker
-docker-compose exec web bin/rails db:migrate RAILS_ENV=test
+docker compose exec web bin/rails db:migrate RAILS_ENV=test
 
 # Local
 RAILS_ENV=test bin/rails db:migrate

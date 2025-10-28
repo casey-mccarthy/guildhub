@@ -131,7 +131,7 @@ gantt
   - `Dockerfile` for Rails app
   - `docker-compose.yml` with PostgreSQL, Redis, Rails
   - Volume mounts for live code reloading
-  - **Acceptance:** `docker-compose up` starts all services
+  - **Acceptance:** `docker compose up` starts all services
   - **Time:** 4 hours
 
 - [ ] **T1.2.2** - Set up development scripts

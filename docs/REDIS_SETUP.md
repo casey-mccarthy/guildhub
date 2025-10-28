@@ -72,7 +72,7 @@ redis:
 
 **With Docker:**
 ```bash
-docker-compose up -d redis
+docker compose up -d redis
 ```
 
 **Standalone (macOS):**
@@ -109,22 +109,22 @@ bin/rails console
 
 **Check Redis status:**
 ```bash
-docker-compose exec redis redis-cli ping
+docker compose exec redis redis-cli ping
 # => PONG
 
-docker-compose exec redis redis-cli info
+docker compose exec redis redis-cli info
 ```
 
 **View cached keys:**
 ```bash
-docker-compose exec redis redis-cli
+docker compose exec redis redis-cli
 > KEYS guildhub_development:*
 > GET guildhub_development:character/123/dkp_balance
 ```
 
 **Monitor commands in real-time:**
 ```bash
-docker-compose exec redis redis-cli monitor
+docker compose exec redis redis-cli monitor
 ```
 
 ## Cache Namespaces
@@ -235,13 +235,13 @@ Error: Redis::CannotConnectError - Error connecting to Redis on localhost:6379
 **Solution:**
 ```bash
 # Check if Redis is running
-docker-compose ps redis
+docker compose ps redis
 
 # Start Redis
-docker-compose up -d redis
+docker compose up -d redis
 
 # Check logs
-docker-compose logs redis
+docker compose logs redis
 ```
 
 ### Wrong Database
@@ -262,7 +262,7 @@ Error: OOM command not allowed when used memory > 'maxmemory'
 **Solution:**
 ```bash
 # Check memory usage
-docker-compose exec redis redis-cli info memory
+docker compose exec redis redis-cli info memory
 
 # Set eviction policy in docker-compose.yml:
 command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
@@ -275,7 +275,7 @@ Slow cache reads/writes
 
 **Solution:**
 - Check network latency to Redis
-- Monitor slow queries: `docker-compose exec redis redis-cli slowlog get 10`
+- Monitor slow queries: `docker compose exec redis redis-cli slowlog get 10`
 - Consider connection pooling
 - Review cache key complexity
 

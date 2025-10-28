@@ -32,8 +32,8 @@ If not set, follow: `docs/DISCORD_SETUP.md`
 
 ```bash
 # With Docker
-docker-compose exec web bin/rails db:create
-docker-compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:create
+docker compose exec web bin/rails db:migrate
 
 # Or locally
 bin/rails db:create
@@ -44,19 +44,19 @@ bin/rails db:migrate
 
 ```bash
 # Stop existing containers
-docker-compose down
+docker compose down
 
 # Rebuild images (includes new code)
-docker-compose build
+docker compose build
 
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Check logs
-docker-compose logs -f web
+docker compose logs -f web
 
 # Verify app is running
-docker-compose ps
+docker compose ps
 ```
 
 ---
@@ -69,16 +69,16 @@ If you see the default Rails splash page instead of the GuildHub home page:
 
 ```bash
 # Stop containers
-docker-compose down
+docker compose down
 
 # Rebuild images (includes all new files)
-docker-compose build --no-cache
+docker compose build --no-cache
 
 # Start fresh
-docker-compose up -d
+docker compose up -d
 
 # Run migrations
-docker-compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:migrate
 
 # Check it's working
 curl http://localhost:3000
@@ -89,11 +89,11 @@ curl http://localhost:3000
 
 ```bash
 # Check if files exist in container
-docker-compose exec web ls -la app/controllers/home_controller.rb
-docker-compose exec web ls -la app/views/home/index.html.erb
+docker compose exec web ls -la app/controllers/home_controller.rb
+docker compose exec web ls -la app/views/home/index.html.erb
 
 # Check routes in container
-docker-compose exec web bin/rails routes | grep root
+docker compose exec web bin/rails routes | grep root
 
 # If files are missing, rebuild is required (Option 1)
 ```
@@ -102,7 +102,7 @@ docker-compose exec web bin/rails routes | grep root
 
 ```bash
 # View real-time logs
-docker-compose logs -f web
+docker compose logs -f web
 
 # Look for errors like:
 # - "uninitialized constant HomeController"
@@ -118,7 +118,7 @@ docker-compose logs -f web
 
 **Option A: Docker**
 ```bash
-docker-compose up -d
+docker compose up -d
 # App at: http://localhost:3000
 ```
 
@@ -135,7 +135,7 @@ bin/dev
 RAILS_ENV=test bin/rails db:create db:migrate
 
 # Or with Docker
-docker-compose exec web bash -c "RAILS_ENV=test bin/rails db:create db:migrate"
+docker compose exec web bash -c "RAILS_ENV=test bin/rails db:create db:migrate"
 ```
 
 ---
@@ -160,7 +160,7 @@ bundle exec rspec spec/controllers/application_controller_spec.rb  # Auth helper
 bundle exec rspec spec/system/discord_authentication_spec.rb       # End-to-end (12+ tests)
 
 # With Docker
-docker-compose exec web bundle exec rspec spec/models/user_spec.rb
+docker compose exec web bundle exec rspec spec/models/user_spec.rb
 ```
 
 ### Expected Results
@@ -261,7 +261,7 @@ curl http://localhost:3000 | grep "Login with Discord"
 **Verification:**
 ```bash
 # Check user was created in database
-docker-compose exec web bin/rails console
+docker compose exec web bin/rails console
 > User.count
 > User.last.attributes
 ```
@@ -292,7 +292,7 @@ docker-compose exec web bin/rails console
 **Verification:**
 ```bash
 # Check session is set
-docker-compose exec web bin/rails console
+docker compose exec web bin/rails console
 > user = User.last
 > user.discord_username
 > user.discord_avatar_url
@@ -322,7 +322,7 @@ docker-compose exec web bin/rails console
 **Verification:**
 ```bash
 # Check logout is logged
-docker-compose logs web | grep "logged out"
+docker compose logs web | grep "logged out"
 ```
 
 ---
@@ -401,7 +401,7 @@ docker-compose logs web | grep "logged out"
 
 **Verification:**
 ```bash
-docker-compose exec web bin/rails console
+docker compose exec web bin/rails console
 > User.count  # Should not increase
 > User.last.updated_at  # Should be recent
 ```
@@ -430,7 +430,7 @@ docker-compose exec web bin/rails console
 **Steps:**
 1. Create admin user:
    ```bash
-   docker-compose exec web bin/rails console
+   docker compose exec web bin/rails console
    > user = User.last
    > user.update(admin: true)
    > exit
@@ -468,7 +468,7 @@ docker-compose exec web bin/rails console
 **Steps:**
 1. Remove avatar URL from user:
    ```bash
-   docker-compose exec web bin/rails console
+   docker compose exec web bin/rails console
    > User.last.update(discord_avatar_url: nil)
    ```
 2. Refresh page
@@ -643,7 +643,7 @@ docker-compose exec web bin/rails console
 
 ```bash
 # View logs (Docker)
-docker-compose logs -f web
+docker compose logs -f web
 
 # Look for:
 # - "User authenticated via Discord: username#1234 (ID: 1)"
@@ -655,7 +655,7 @@ docker-compose logs -f web
 
 ```bash
 # Enter Rails console
-docker-compose exec web bin/rails console
+docker compose exec web bin/rails console
 
 # Check users created
 > User.count
@@ -675,11 +675,11 @@ docker-compose exec web bin/rails console
 
 ```bash
 # List all routes
-docker-compose exec web bin/rails routes
+docker compose exec web bin/rails routes
 
 # Check auth routes specifically
-docker-compose exec web bin/rails routes | grep auth
-docker-compose exec web bin/rails routes | grep logout
+docker compose exec web bin/rails routes | grep auth
+docker compose exec web bin/rails routes | grep logout
 ```
 
 ---
@@ -694,26 +694,26 @@ docker-compose exec web bin/rails routes | grep logout
 
 1. **Rebuild Docker containers:**
    ```bash
-   docker-compose down
-   docker-compose build --no-cache
-   docker-compose up -d
+   docker compose down
+   docker compose build --no-cache
+   docker compose up -d
    ```
 
 2. **Check files exist in container:**
    ```bash
-   docker-compose exec web ls -la app/controllers/home_controller.rb
-   docker-compose exec web ls -la app/views/home/index.html.erb
+   docker compose exec web ls -la app/controllers/home_controller.rb
+   docker compose exec web ls -la app/views/home/index.html.erb
    ```
 
 3. **Check routes:**
    ```bash
-   docker-compose exec web bin/rails routes | grep root
+   docker compose exec web bin/rails routes | grep root
    # Should show: root GET / home#index
    ```
 
 4. **Check for errors:**
    ```bash
-   docker-compose logs web | tail -50
+   docker compose logs web | tail -50
    ```
 
 ### Issue: "Uninitialized constant HomeController"
@@ -722,9 +722,9 @@ docker-compose exec web bin/rails routes | grep logout
 ```bash
 # HomeController not loaded in container
 # Rebuild Docker images
-docker-compose down
-docker-compose build
-docker-compose up -d
+docker compose down
+docker compose build
+docker compose up -d
 ```
 
 ### Issue: "Missing template home/index"
@@ -733,9 +733,9 @@ docker-compose up -d
 ```bash
 # View file not in container
 # Rebuild Docker images
-docker-compose down
-docker-compose build
-docker-compose up -d
+docker compose down
+docker compose build
+docker compose up -d
 ```
 
 ### Issue: "Discord OAuth not working"
@@ -746,7 +746,7 @@ docker-compose up -d
 
 1. **Check credentials:**
    ```bash
-   docker-compose exec web bin/rails credentials:show | grep discord
+   docker compose exec web bin/rails credentials:show | grep discord
    ```
 
 2. **Check redirect URI matches:**
@@ -755,7 +755,7 @@ docker-compose up -d
 
 3. **Check OmniAuth initializer loaded:**
    ```bash
-   docker-compose exec web ls -la config/initializers/omniauth.rb
+   docker compose exec web ls -la config/initializers/omniauth.rb
    ```
 
 ### Issue: "Database connection error"
@@ -763,11 +763,11 @@ docker-compose up -d
 **Solution:**
 ```bash
 # Create and migrate database
-docker-compose exec web bin/rails db:create
-docker-compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:create
+docker compose exec web bin/rails db:migrate
 
 # Check database.yml
-docker-compose exec web cat config/database.yml
+docker compose exec web cat config/database.yml
 ```
 
 ### Issue: "Logout button doesn't work"
@@ -776,7 +776,7 @@ docker-compose exec web cat config/database.yml
 
 1. **Check route exists:**
    ```bash
-   docker-compose exec web bin/rails routes | grep logout
+   docker compose exec web bin/rails routes | grep logout
    # Should show: logout DELETE /logout sessions#destroy
    ```
 
@@ -786,7 +786,7 @@ docker-compose exec web cat config/database.yml
 
 3. **Check logs for errors:**
    ```bash
-   docker-compose logs web | grep logout
+   docker compose logs web | grep logout
    ```
 
 ---

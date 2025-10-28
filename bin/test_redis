@@ -61,7 +61,7 @@ rescue Redis::CannotConnectError => e
   puts "\n❌ Cannot connect to Redis!"
   puts "   Error: #{e.message}"
   puts "\n💡 Make sure Redis is running:"
-  puts "   docker-compose up -d redis"
+  puts "   docker compose up -d redis"
   puts "   or"
   puts "   redis-server"
   exit 1

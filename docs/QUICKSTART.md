@@ -47,13 +47,13 @@ docker ps
 
 ```bash
 # Build Docker images
-docker-compose build
+docker compose build
 
 # Start all containers (PostgreSQL, Redis, Web server)
-docker-compose up -d
+docker compose up -d
 
 # Verify containers are running
-docker-compose ps
+docker compose ps
 # Should show: web, db, redis all "Up"
 ```
 
@@ -61,14 +61,14 @@ docker-compose ps
 
 ```bash
 # Create databases
-docker-compose exec web bin/rails db:create
+docker compose exec web bin/rails db:create
 
 # Run migrations
-docker-compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:migrate
 
 # Create test database
-docker-compose exec web bin/rails db:create RAILS_ENV=test
-docker-compose exec web bin/rails db:migrate RAILS_ENV=test
+docker compose exec web bin/rails db:create RAILS_ENV=test
+docker compose exec web bin/rails db:migrate RAILS_ENV=test
 ```
 
 ### Step 5: Setup Discord App
@@ -96,7 +96,7 @@ cat docs/DISCORD_SETUP.md
 
 ```bash
 # Edit Rails credentials
-docker-compose exec web bin/rails credentials:edit
+docker compose exec web bin/rails credentials:edit
 
 # This opens an editor. Add this structure:
 discord:
@@ -348,22 +348,22 @@ xcode-select --install
 
 ```bash
 # Start containers
-docker-compose up -d
+docker compose up -d
 
 # Stop containers
-docker-compose down
+docker compose down
 
 # View logs
-docker-compose logs -f web
+docker compose logs -f web
 
 # Rebuild containers
-docker-compose build
+docker compose build
 
 # Run Rails console
-docker-compose exec web bin/rails console
+docker compose exec web bin/rails console
 
 # Run database migrations
-docker-compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:migrate
 
 # Run tests
 bin/test_docker
@@ -402,11 +402,11 @@ brew services stop postgresql@16
 cd ~/Documents/GitHub/guildhub
 
 # Check containers are running
-docker-compose ps
+docker compose ps
 # Should show: web, db, redis all "Up"
 
 # Check database connection
-docker-compose exec web bin/rails runner "puts User.count"
+docker compose exec web bin/rails runner "puts User.count"
 # Should show: 0 (or number of users)
 
 # Check home page
@@ -449,7 +449,7 @@ bin/dev
 
 ## Troubleshooting
 
-### "command not found: docker-compose"
+### "command not found: docker compose"
 
 **Solution:**
 ```bash
@@ -459,7 +459,7 @@ open -a Docker
 # Wait for Docker to fully start (whale icon in menu bar shows "Docker is running")
 
 # Try again
-docker-compose --version
+docker compose version
 ```
 
 ### "Error: No such file or directory"
@@ -478,8 +478,8 @@ cd ~/Documents/GitHub/guildhub
 
 **Solution with Docker:**
 ```bash
-docker-compose exec web bin/rails db:create
-docker-compose exec web bin/rails db:migrate
+docker compose exec web bin/rails db:create
+docker compose exec web bin/rails db:migrate
 ```
 
 **Solution locally:**
@@ -504,8 +504,8 @@ bin/test_docker
 **Docker:**
 ```bash
 # Ensure containers are running
-docker-compose up -d
-docker-compose ps
+docker compose up -d
+docker compose ps
 ```
 
 **Local:**
@@ -526,7 +526,7 @@ lsof -i :3000
 kill -9 <PID>
 
 # Or use a different port
-docker-compose up -d
+docker compose up -d
 # Then edit docker-compose.yml to use different port
 ```
 
@@ -550,7 +550,7 @@ After setup is complete:
 # === DOCKER WORKFLOW ===
 
 # Start everything
-docker-compose up -d
+docker compose up -d
 
 # Run tests
 bin/test_docker
@@ -559,13 +559,13 @@ bin/test_docker
 open http://localhost:3000
 
 # Rails console
-docker-compose exec web bin/rails console
+docker compose exec web bin/rails console
 
 # View logs
-docker-compose logs -f web
+docker compose logs -f web
 
 # Stop everything
-docker-compose down
+docker compose down
 
 
 # === LOCAL WORKFLOW ===

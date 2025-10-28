@@ -9,8 +9,8 @@ echo ""
 
 # Setup test database if needed
 echo "📦 Ensuring test database exists..."
-docker-compose exec web bin/rails db:create RAILS_ENV=test 2>/dev/null || true
-docker-compose exec web bin/rails db:migrate RAILS_ENV=test
+docker compose exec web bin/rails db:create RAILS_ENV=test 2>/dev/null || true
+docker compose exec web bin/rails db:migrate RAILS_ENV=test
 
 echo ""
 echo "🚀 Running RSpec tests..."
@@ -18,10 +18,10 @@ echo ""
 
 if [ -z "$1" ]; then
   # Run all tests
-  docker-compose exec web bundle exec rspec --format documentation
+  docker compose exec web bundle exec rspec --format documentation
 else
   # Run specific test file
-  docker-compose exec web bundle exec rspec "$1" --format documentation
+  docker compose exec web bundle exec rspec "$1" --format documentation
 fi
 
 echo ""
