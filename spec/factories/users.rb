@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bcrypt"
+
 FactoryBot.define do
   factory :user do
     # Discord ID is a snowflake (18-19 digit number)
