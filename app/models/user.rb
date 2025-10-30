@@ -57,7 +57,7 @@ class User < ApplicationRecord
 
   # Instance methods
   def display_name
-    username.presence || email.split('@').first || "User ##{id}"
+    username.presence || email.split("@").first || "User ##{id}"
   end
 
   def password_auth?
@@ -84,6 +84,6 @@ class User < ApplicationRecord
   end
 
   def set_default_username
-    self.username ||= email.split('@').first if email.present?
+    self.username ||= email.split("@").first if email.present?
   end
 end
