@@ -98,6 +98,8 @@ RSpec.configure do |config|
 
   # Configure DatabaseCleaner
   config.before(:suite) do
+    # Allow cleaning Docker database (safe in test environment)
+    DatabaseCleaner.allow_remote_database_url = true
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
   end
