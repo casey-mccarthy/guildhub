@@ -23,22 +23,26 @@ class ApplicationController < ActionController::Base
 
   # Require user to be signed in
   # Redirects to root with alert if not authenticated
+  # @return [Boolean] true if authenticated, false if redirected
   def authenticate_user!
-    return if user_signed_in?
+    return true if user_signed_in?
 
     # Store the requested path to return after sign in
     session[:return_to] = request.fullpath unless request.fullpath == root_path
 
     redirect_to root_path, alert: "Please sign in to continue."
+    false
   end
 
   # Require user to be an admin
   # Redirects to root with alert if not authorized
+  # @return [Boolean] true if admin, false if redirected
   def authenticate_admin!
-    authenticate_user!
+    return false unless authenticate_user!
 
-    return if current_user&.admin?
+    return true if current_user&.admin?
 
     redirect_to root_path, alert: "You are not authorized to access this page."
+    false
   end
 end

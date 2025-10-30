@@ -8,8 +8,10 @@ RSpec.describe "Sessions", type: :request do
       let(:user) { create(:user) }
 
       before do
-        # Simulate signed-in user
-        post auth_callback_path(provider: "discord"), session: { user_id: user.id }
+        # Simulate signed-in user by setting session
+        # In Rails 8, we need to set session separately
+        get root_path # Initialize session
+        session[:user_id] = user.id
       end
 
       it "clears the session" do

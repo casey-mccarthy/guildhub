@@ -9,12 +9,12 @@ RSpec.describe ApplicationController, type: :controller do
     end
 
     def protected_action
-      authenticate_user!
+      return unless authenticate_user!
       render plain: "Protected"
     end
 
     def admin_action
-      authenticate_admin!
+      return unless authenticate_admin!
       render plain: "Admin"
     end
   end

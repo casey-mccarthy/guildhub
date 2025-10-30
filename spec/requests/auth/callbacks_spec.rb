@@ -100,13 +100,21 @@ RSpec.describe "Auth::Callbacks", type: :request do
     context "when return_to is stored in session" do
       it "redirects to stored location after sign in" do
         # Simulate authenticate_user! storing return path
-        get auth_callback_path(provider: "discord"), params: {}, session: { return_to: "/characters" }
+        # In Rails 8, we need to set session in a separate step
+        # First, make a request to set the session, then test the callback
+        get root_path # Initialize session
+        session[:return_to] = "/characters" # Set return path
+
+        get auth_callback_path(provider: "discord")
 
         expect(response).to redirect_to("/characters")
       end
 
       it "clears return_to from session" do
-        get auth_callback_path(provider: "discord"), params: {}, session: { return_to: "/characters" }
+        get root_path # Initialize session
+        session[:return_to] = "/characters" # Set return path
+
+        get auth_callback_path(provider: "discord")
 
         expect(session[:return_to]).to be_nil
       end

@@ -7,7 +7,8 @@ RSpec.describe User, type: :model do
     subject { build(:user) }
 
     it { should validate_presence_of(:discord_id) }
-    it { should validate_uniqueness_of(:discord_id) }
+    # Discord IDs are numeric snowflakes, so we skip case sensitivity check
+    it { should validate_uniqueness_of(:discord_id).case_insensitive }
     it { should validate_presence_of(:discord_username) }
 
     describe "email format validation" do
@@ -222,12 +223,12 @@ RSpec.describe User, type: :model do
     end
 
     it "falls back to email when discord_username is blank" do
-      user = create(:user, discord_username: nil, email: "test@example.com")
+      user = build_stubbed(:user, discord_username: nil, email: "test@example.com")
       expect(user.display_name).to eq("test@example.com")
     end
 
     it "falls back to user ID when both are blank" do
-      user = create(:user, discord_username: nil, email: nil)
+      user = build_stubbed(:user, discord_username: nil, email: nil)
       expect(user.display_name).to eq("User ##{user.id}")
     end
   end

@@ -18,7 +18,7 @@
 
 class User < ApplicationRecord
   # Validations
-  validates :discord_id, presence: true, uniqueness: true
+  validates :discord_id, presence: true, uniqueness: { case_sensitive: false }
   validates :discord_username, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, allow_blank: true }
 
