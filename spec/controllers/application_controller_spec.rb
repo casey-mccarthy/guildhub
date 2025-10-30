@@ -124,11 +124,10 @@ RSpec.describe ApplicationController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
 
-      it "shows alert message" do
+      it "sets alert message in flash" do
         get :protected_action
 
-        follow_redirect!
-        expect(response.body).to include("Please sign in to continue")
+        expect(flash[:alert]).to eq("Please sign in to continue.")
       end
 
       it "stores return path in session" do
@@ -177,11 +176,10 @@ RSpec.describe ApplicationController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
 
-      it "shows unauthorized message" do
+      it "sets unauthorized message in flash" do
         get :admin_action
 
-        follow_redirect!
-        expect(response.body).to include("You are not authorized")
+        expect(flash[:alert]).to eq("You are not authorized to access this page.")
       end
     end
 
@@ -192,11 +190,10 @@ RSpec.describe ApplicationController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
 
-      it "shows sign in message" do
+      it "sets sign in message in flash" do
         get :admin_action
 
-        follow_redirect!
-        expect(response.body).to include("Please sign in to continue")
+        expect(flash[:alert]).to eq("Please sign in to continue.")
       end
     end
   end
