@@ -4,6 +4,41 @@ This directory contains custom slash commands for Claude Code to streamline deve
 
 ## Available Commands
 
+### `/submit-pr` - Auto-Submit PR (Hands-Off) 🚀 **NEW**
+
+**Fully automated PR submission - run and go to work!**
+
+Automatically validates, commits, and submits a PR without any user prompts.
+
+**What it does:**
+1. ✅ Auto-creates feature branch if on main
+2. ✅ Rubocop auto-fix
+3. ✅ Runs tests locally (continues if fail)
+4. ✅ Auto-commits all changes
+5. ✅ Pushes to remote
+6. ✅ Creates/updates PR with auto-generated description
+7. ✅ Marks as draft if tests failing
+8. ✅ Never stops - handles all errors automatically
+
+**Usage:**
+```
+/submit-pr
+```
+
+**When to use:**
+- End of work session (save and go)
+- Need to submit WIP quickly
+- Auto-submit progress before leaving
+- Quick iteration workflow
+
+**Important:**
+- This is NOT the final merge workflow
+- Use `/pre-merge` for final validation before merge
+- This is for "save progress" submissions
+- CI/CD will run full checks after submission
+
+---
+
 ### `/pre-merge` - Complete Pre-Merge Workflow ⭐
 
 **Use this before submitting any PR for merge.**
@@ -104,6 +139,14 @@ Clean up Docker resources and optionally reset the environment.
 
 ## Workflow Examples
 
+### Quick Submit Flow (Hands-Off) 🚀
+
+1. Make your changes
+2. Run `/submit-pr` (auto-submits everything)
+3. Go to work / step away
+4. CI/CD runs automatically
+5. Come back and check `/pr-status`
+
 ### Standard Development Flow
 
 1. Make your changes
@@ -146,10 +189,21 @@ To modify these commands, edit the `.md` files in this directory. Each command i
 
 ## Tips
 
-- Use `/pre-merge` as your final quality gate
+- Use `/submit-pr` for quick hands-off PR submission (WIP)
+- Use `/pre-merge` as your final quality gate before merge
 - Run `/quick-test` often during development
 - Check `/pr-status` after every push
 - Clean Docker regularly with `/docker-clean`
+
+## Command Comparison
+
+| Command | Speed | Validation | Use Case |
+|---------|-------|------------|----------|
+| `/submit-pr` | ⚡ Fast | Basic (local tests) | Quick WIP submission, end of session |
+| `/quick-test` | ⚡ Fast | Basic (local tests) | During development, iteration |
+| `/pre-merge` | 🐢 Slow | Comprehensive (Docker) | Before final merge, production-ready |
+| `/pr-status` | ⚡ Instant | N/A | Check CI/CD status |
+| `/docker-clean` | ⚡ Fast | N/A | Free disk space, reset env |
 
 ---
 
