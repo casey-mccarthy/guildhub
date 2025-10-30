@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Test runner for local environment (non-Docker)
+# Usage: bin/test_local [spec_file]
+
+set -e
+
+echo "🧪 Running tests locally..."
+echo ""
+
+# Set local database configuration
+export DATABASE_HOST=localhost
+export DATABASE_USER=${DATABASE_USER:-postgres}
+export DATABASE_PASSWORD=${DATABASE_PASSWORD:-postgres}
+
+# Setup test database if needed
+echo "📦 Ensuring test database exists..."
+RAILS_ENV=test bin/rails db:create 2>/dev/null || true
+RAILS_ENV=test bin/rails db:migrate
+
+echo ""
+echo "🚀 Running RSpec tests..."
+echo ""
+
+if [ -z "$1" ]; then
+  # Run all tests
+  bundle exec rspec --format documentation
+else
+  # Run specific test file
+  bundle exec rspec "$1" --format documentation
+fi
+
+echo ""
+echo "✅ Tests complete!"
+echo ""
+echo "📊 View coverage report: open coverage/index.html"

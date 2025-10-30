@@ -522,14 +522,41 @@ Key migration considerations (Epic 12):
 
 ## Development Workflow
 
-### ⚠️ IMPORTANT: Branch Protection Rules
+### ⚠️ CRITICAL RULES FOR ALL COMMITS
 
-**NEVER commit directly to `main` branch!** All changes MUST go through Pull Requests.
-
+**1. NEVER commit directly to `main` branch!**
+- All changes MUST go through Pull Requests
 - The `main` branch is protected
 - All development happens on feature branches
-- Changes are merged via Pull Requests only
 - This applies to both human developers AND AI assistants
+
+**2. ALL TESTS MUST PASS before committing!**
+- Run `bundle exec rspec` (or `docker-compose exec web bundle exec rspec`)
+- ALL tests must be GREEN (0 failures, 0 errors)
+- Coverage must be >= 80%
+- **NO EXCEPTIONS** - If tests fail, fix them before committing
+
+**3. Pre-Commit Checklist (MANDATORY):**
+```bash
+# Step 1: Run tests (REQUIRED - must pass)
+docker-compose exec web bundle exec rspec
+# OR: bundle exec rspec
+
+# Step 2: Run linter (auto-fix issues)
+bundle exec rubocop -a
+
+# Step 3: Run security scan
+bundle exec brakeman
+
+# Step 4: Manual verification (if UI changes)
+# Start server and test manually
+docker-compose up -d
+# Visit: http://localhost:3000
+
+# Step 5: Commit only if ALL checks pass
+git add .
+git commit -m "feat: description [TaskID]"
+```
 
 ### Workflow Steps
 
@@ -556,7 +583,11 @@ Key migration considerations (Epic 12):
    - Follow Rails conventions
 
 5. **Run Test Suite (MUST PASS):**
+
+   **⚠️ CRITICAL: ALL TESTS MUST PASS BEFORE COMMITTING. NO EXCEPTIONS.**
+
    ```bash
+   # LOCAL TESTING
    # Run all tests
    bundle exec rspec
 
@@ -565,7 +596,34 @@ Key migration considerations (Epic 12):
 
    # Run with coverage report
    COVERAGE=true bundle exec rspec
+
+   # DOCKER TESTING (if database configured for Docker)
+   # First time setup (once per project)
+   docker-compose exec web bin/rails db:create RAILS_ENV=test
+   docker-compose exec web bin/rails db:migrate RAILS_ENV=test
+
+   # Run all tests in Docker
+   docker-compose exec web bundle exec rspec
+
+   # Run specific test in Docker
+   docker-compose exec web bundle exec rspec spec/models/user_spec.rb
+
+   # Run with documentation format
+   docker-compose exec web bundle exec rspec --format documentation
    ```
+
+   **Required Test Results:**
+   - ✅ ALL examples passing (green output)
+   - ✅ 0 failures, 0 errors
+   - ✅ Coverage >= 80% (check coverage/index.html)
+   - ✅ No pending tests
+
+   **If ANY test fails:**
+   - ❌ DO NOT commit
+   - Fix failing tests immediately
+   - Re-run full test suite
+   - Only commit when ALL tests pass
+
    **Tests MUST pass before committing!**
 
 6. **Run Code Quality Checks:**
