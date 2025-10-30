@@ -23,9 +23,9 @@
 class User < ApplicationRecord
   # Devise modules for password authentication
   # Remove :database_authenticatable when swapping to OAuth-only
+  # Note: :recoverable and :rememberable removed until we add those columns
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :trackable
+         :validatable, :trackable
 
   # Validations
   validates :email, presence: true, uniqueness: { case_sensitive: false }
@@ -57,7 +57,7 @@ class User < ApplicationRecord
 
   # Instance methods
   def display_name
-    username.presence || email.split("@").first || "User ##{id}"
+    username.presence || email.split("@").first.presence || "User ##{id}"
   end
 
   def password_auth?

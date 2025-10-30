@@ -231,20 +231,20 @@ RSpec.describe User, type: :model do
       expect(User.devise_modules).to include(:registerable)
     end
 
-    it 'includes recoverable module' do
-      expect(User.devise_modules).to include(:recoverable)
-    end
-
-    it 'includes rememberable module' do
-      expect(User.devise_modules).to include(:rememberable)
-    end
-
     it 'includes validatable module' do
       expect(User.devise_modules).to include(:validatable)
     end
 
     it 'includes trackable module' do
       expect(User.devise_modules).to include(:trackable)
+    end
+
+    it 'does not include recoverable module (columns not yet added)' do
+      expect(User.devise_modules).not_to include(:recoverable)
+    end
+
+    it 'does not include rememberable module (columns not yet added)' do
+      expect(User.devise_modules).not_to include(:rememberable)
     end
   end
 end
