@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  # Authentication (Devise)
+  # Currently using database_authenticatable (username/password)
+  # To swap to OAuth: uncomment omniauth_callbacks and add provider config
+  devise_for :users
+  # devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
